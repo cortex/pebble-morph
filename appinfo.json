@@ -1,0 +1,17 @@
+{
+  "uuid": "7f21aef2-aed5-4211-9db1-8408c07e4622",
+  "shortName": "morph",
+  "longName": "morph",
+  "companyName": "Frikod interactive",
+  "versionCode": 1,
+  "versionLabel": "1.0",
+  "watchapp": {
+    "watchface": true
+  },
+  "appKeys": {
+    "dummy": 0
+  },
+  "resources": {
+    "media": []
+  }
+}
