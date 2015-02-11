@@ -3,28 +3,30 @@
 static Window *window;
 static Layer *layer;
 
-static GPathInfo ONE = {
-    5,
-    (GPoint []) {{0,10}, {10,0}, {10, 40}, {0, 40}, {20, 40}, {20,40}, {20,40}}
+#define NUM_POINTS 19
+#define NUM_CHAR 10
+
+static GPoint NUMBERS[][NUM_POINTS] ={
+    {{ 0, 10}, {10,  0}, {30,  0}, {40, 10}, {40, 40}, {30, 50}, {10, 50}, { 0, 40}, { 0, 10}, { 0, 10}, { 0, 10}, { 0, 10}, { 0, 10}, { 0, 10}, { 0, 10}, { 0, 10}, { 0, 10}, { 0, 10}, { 0, 10}}, // Zero
+    {{ 0, 10}, {20,  0}, {20, 50}, { 0, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}}, // One
+    {{ 0, 10}, {20,  0}, {40, 10}, {40, 20}, {10, 30}, { 0, 50}, {10, 50}, {20, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}}, // Two
+    {{ 0, 10}, {20,  0}, {40, 10}, {20, 20}, {40, 30}, {40, 40}, {20, 50}, { 0, 40}, { 0, 40}, { 0, 40}, { 0, 40}, { 0, 40}, { 0, 40}, { 0, 40}, { 0, 40}, { 0, 40}, { 0, 40}, { 0, 40}, { 0, 40}}, // Three
+    {{20,  0}, {10, 10}, { 0, 30}, {40, 30}, {40,  0}, {40, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}}, // Four
+    {{40,  0}, {10,  0}, { 0, 20}, {30, 20}, {40, 30}, {30, 50}, {10, 40}, {10, 40}, {10, 40}, {10, 40}, {10, 40}, {10, 40}, {10, 40}, {10, 40}, {10, 40}, {10, 40}, {10, 40}, {10, 40}, {10, 40}}, // Five
+    {{30,  0}, {10,  0}, { 0, 20}, { 0, 30}, {10, 50}, {30, 50}, {40, 30}, {30, 20}, {10, 20}, { 0, 20}, { 0, 20}, { 0, 20}, { 0, 20}, { 0, 20}, { 0, 20}, { 0, 20}, { 0, 20}, { 0, 20}, { 0, 20}}, // Six
+    {{ 0,  0}, {40,  0}, {20, 20}, {10, 20}, {20, 20}, {30, 20}, {20, 20}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}}, // Seven
+    {{10,  0}, {30,  0}, {40, 10}, {40, 20}, {30, 25}, {20, 25}, {30, 25}, {40 ,30}, {40, 40}, {40, 50}, {10, 50}, { 0, 40}, { 0, 30}, {10, 25}, {20, 25}, {10, 25}, { 0, 20}, { 0, 10}, {10,  0}},  // Eight
+    {{40, 20}, {30, 30}, {10, 30}, { 0, 20}, {10,  0}, {30,  0}, {40, 20}, {40 ,30}, {30, 50}, {10, 50}, {10, 50}, {10, 50}, {10, 50}, {10, 50}, {10, 50}, {10, 50}, {10, 50}, {10, 50}, {10, 50}},  // Nine
 };
 
-static GPoint TWO[] = {{{0,10}, {10,0}, {20, 10}, {0, 40}, {20, 40}, {20, 40}, {20, 40}}
-};
+#define DELAY 10
+#define NUM_STEPS 20.0
 
-static GPathInfo THREE = {
-    5,
-    (GPoint []) {{0,10}, {10,0}, {20, 10}, {10, 20}, {20, 30}, {10,40}, {0,30}}
-};
+static GPoint currentPoints[NUM_POINTS] = {{0,0}, {0,0}, {0,0}, {0,0}, {0,0}, {0,0}, {0,0}};
+static float step = 1;
 
-#define NUM_POINTS 7
-#define NUM_STEPS  100
-
-static GPoint points[] = {{0,0}, {0,0}, {0,0}, {0,0}, {0,0}};
-
-static GPathInfo *target_path = &TWO;
-static GPathInfo *source_path = &ONE;
-static float step = NUM_STEPS;
-static int shape = 0;
+static int fromChar = 0;
+static int toChar = 1;
 
 static void layer_update_callback(Layer *me, GContext *ctx) {
     graphics_context_set_stroke_color(ctx, GColorWhite);
@@ -32,43 +34,31 @@ static void layer_update_callback(Layer *me, GContext *ctx) {
     GPoint s;
 
     for (unsigned int i = 0; i < NUM_POINTS; i++){
-        t = (*target_path).points[i];
-        s = (*source_path).points[i];
+        s = NUMBERS[fromChar][i];
+        t = NUMBERS[toChar][i];
 
-        //APP_LOG(APP_LOG_LEVEL_DEBUG, "Loop index now %d %d %d", (int)step, c.y, t.y);
-        points[i].x = s.x + ((t.x - s.x) / step);
-        points[i].y = s.y + ((t.y - s.y) / step);
-        //c.x = t.x;
-        //c.y = t.y;
-    }
-    for (unsigned int i = 0; i < NUM_POINTS-1; i++){
-        graphics_draw_line(ctx, points[i+1], points[i]);
-    }
-    //APP_LOG(APP_LOG_LEVEL_DEBUG, 
-    //    "Loop index now %d %d %d",
-    //   (int)step, points[3].x, points[1].y);
-    //graphics_draw_line(ctx, (GPoint){0,0}, (GPoint){100,100});
-    step -= 1;
-    if (step == 0){
-        step = 100;
-        source_path = target_path;
-        if (shape == 0){
-            shape = 1;
-            target_path = &TWO;
-        }if(shape == 1){
-            shape = 2;
-            target_path = &THREE;
+        //APP_LOG(APP_LOG_LEVEL_DEBUG, "Loop index now %d",  (int)(100 * (step/NUM_STEPS)));
+        currentPoints[i].x = (s.x - ((s.x - t.x) * (step / NUM_STEPS))) * 2 + 30;
+        currentPoints[i].y = (s.y - ((s.y - t.y) * (step / NUM_STEPS))) * 2 + 10;
+
+        if (i >0){
+            graphics_draw_line(ctx, currentPoints[i-1], currentPoints[i]);
         }
-        else{
-            shape = 0;
-            target_path = &ONE;
-        }
+    }
+
+    step++;
+    if (step > NUM_STEPS){
+        fromChar = toChar;
+        toChar++; 
+        if (toChar>NUM_CHAR-1) toChar=0;
+        step = 1;
+        APP_LOG(APP_LOG_LEVEL_DEBUG, "From char: %d To char %d", fromChar, toChar);
     }
 }
 
 static void refresh(){
     layer_mark_dirty(layer);
-    app_timer_register(10, refresh, 0);
+    app_timer_register(DELAY, refresh, 0);
 }
 
 static void init() {
@@ -80,8 +70,8 @@ static void init() {
     GRect bounds = layer_get_frame(window_layer);
     layer = layer_create(bounds);
     layer_add_child(window_layer, layer);
-    
-    app_timer_register(10, refresh, 0);
+
+    app_timer_register(DELAY, refresh, 0);
     layer_set_update_proc(layer, layer_update_callback);
 }
 
