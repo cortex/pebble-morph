@@ -3,63 +3,99 @@
 static Window *window;
 static Layer *layer;
 
-#define NUM_POINTS 19
+#define NUM_POINTS 13
 #define NUM_CHAR 10
 
-static GPoint NUMBERS[][NUM_POINTS] ={
-    {{ 0, 10}, {10,  0}, {30,  0}, {40, 10}, {40, 40}, {30, 50}, {10, 50}, { 0, 40}, { 0, 10}, { 0, 10}, { 0, 10}, { 0, 10}, { 0, 10}, { 0, 10}, { 0, 10}, { 0, 10}, { 0, 10}, { 0, 10}, { 0, 10}}, // Zero
-    {{ 0, 10}, {20,  0}, {20, 50}, { 0, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}}, // One
-    {{ 0, 10}, {20,  0}, {40, 10}, {40, 20}, {10, 30}, { 0, 50}, {10, 50}, {20, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}}, // Two
-    {{ 0, 10}, {20,  0}, {40, 10}, {20, 20}, {40, 30}, {40, 40}, {20, 50}, { 0, 40}, { 0, 40}, { 0, 40}, { 0, 40}, { 0, 40}, { 0, 40}, { 0, 40}, { 0, 40}, { 0, 40}, { 0, 40}, { 0, 40}, { 0, 40}}, // Three
-    {{20,  0}, {10, 10}, { 0, 30}, {40, 30}, {40,  0}, {40, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}, {40, 50}}, // Four
-    {{40,  0}, {10,  0}, { 0, 20}, {30, 20}, {40, 30}, {30, 50}, {10, 40}, {10, 40}, {10, 40}, {10, 40}, {10, 40}, {10, 40}, {10, 40}, {10, 40}, {10, 40}, {10, 40}, {10, 40}, {10, 40}, {10, 40}}, // Five
-    {{30,  0}, {10,  0}, { 0, 20}, { 0, 30}, {10, 50}, {30, 50}, {40, 30}, {30, 20}, {10, 20}, { 0, 20}, { 0, 20}, { 0, 20}, { 0, 20}, { 0, 20}, { 0, 20}, { 0, 20}, { 0, 20}, { 0, 20}, { 0, 20}}, // Six
-    {{ 0,  0}, {40,  0}, {20, 20}, {10, 20}, {20, 20}, {30, 20}, {20, 20}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}, {20, 50}}, // Seven
-    {{10,  0}, {30,  0}, {40, 10}, {40, 20}, {30, 25}, {20, 25}, {30, 25}, {40 ,30}, {40, 40}, {40, 50}, {10, 50}, { 0, 40}, { 0, 30}, {10, 25}, {20, 25}, {10, 25}, { 0, 20}, { 0, 10}, {10,  0}},  // Eight
-    {{40, 20}, {30, 30}, {10, 30}, { 0, 20}, {10,  0}, {30,  0}, {40, 20}, {40 ,30}, {30, 50}, {10, 50}, {10, 50}, {10, 50}, {10, 50}, {10, 50}, {10, 50}, {10, 50}, {10, 50}, {10, 50}, {10, 50}},  // Nine
+static GPoint NUMBERS[][NUM_POINTS] = {
+    {{ 0,  2}, { 2,  0}, { 6,  0}, { 8,  2}, { 8,  8}, { 6, 10}, { 2, 10}, { 0,  8}, { 0,  2}, { 0,  2}, { 0,  2}, { 0,  2}, { 0,  2}}, // Zero
+    {{ 0,  2}, { 4,  0}, { 4, 10}, { 0, 10}, { 2, 10}, { 4, 10}, { 6, 10}, { 8, 10}, { 8, 10}, { 8, 10}, { 8, 10}, { 8, 10}, { 8, 10}}, // One
+    {{ 0,  2}, { 4,  0}, { 8,  2}, { 8,  4}, { 2,  6}, { 0, 10}, { 2, 10}, { 4, 10}, { 8, 10}, { 8, 10}, { 8, 10}, { 8, 10}, { 8, 10}}, // Two
+    {{ 0,  2}, { 4,  0}, { 8,  2}, { 4,  4}, { 8,  6}, { 8,  8}, { 4, 10}, { 0,  8}, { 0,  8}, { 0,  8}, { 0,  8}, { 0,  8}, { 0,  8}}, // Three
+    {{ 4,  0}, { 2,  2}, { 0,  6}, { 8,  6}, { 8,  0}, { 8, 10}, { 8, 10}, { 8, 10}, { 8, 10}, { 8, 10}, { 8, 10}, { 8, 10}, { 8, 10}}, // Four
+    {{ 6,  0}, { 1,  0}, { 0,  4}, { 6,  4}, { 8,  6}, { 6, 10}, { 2, 10}, { 0,  8}, { 0,  8}, { 0,  8}, { 0,  8}, { 0,  8}, { 0,  8}}, // Five
+    {{ 6,  0}, { 2,  0}, { 0,  4}, { 0,  6}, { 2, 10}, { 6, 10}, { 8,  6}, { 6,  4}, { 2,  4}, { 0,  6}, { 0,  6}, { 0,  6}, { 0,  6}}, // Six
+    {{ 0,  0}, { 8,  0}, { 4,  4}, { 4, 10}, { 4, 10}, { 4, 10}, { 4, 10}, { 4, 10}, { 4, 10}, { 4, 10}, { 4, 10}, { 4, 10}, { 4, 10}}, // Seven
+    {{ 2,  0}, { 6,  0}, { 7,  3}, { 6,  4}, { 2,  4}, { 0,  7}, { 2, 10}, { 6, 10}, { 8,  7}, { 6,  4}, { 2,  4}, { 1,  3}, { 2,  0}}, // Eight
+    {{ 8,  4}, { 6,  6}, { 2,  6}, { 0,  4}, { 2,  0}, { 6,  0}, { 8,  4}, { 8,  6}, { 6, 10}, { 2, 10}, { 2, 10}, { 2, 10}, { 2, 10}}, // Nine
 };
 
-#define DELAY 10
-#define NUM_STEPS 20.0
+#define DELAY 8
+#define NUM_STEPS 32
+#define DIGITS 6
 
-static GPoint currentPoints[NUM_POINTS] = {{0,0}, {0,0}, {0,0}, {0,0}, {0,0}, {0,0}, {0,0}};
-static float step = 1;
+static int targetDigits[] = {1,2,3,4,5,6};
 
-static int fromChar = 0;
-static int toChar = 1;
+static GPoint digits[DIGITS][NUM_POINTS];
+static float step = 0;
 
-static void layer_update_callback(Layer *me, GContext *ctx) {
-    graphics_context_set_stroke_color(ctx, GColorWhite);
+static void update_digit(int digit, int targetDigit, float scale, int step, int xoffset, int yoffset){
+
     GPoint t;
     GPoint s;
 
     for (unsigned int i = 0; i < NUM_POINTS; i++){
-        s = NUMBERS[fromChar][i];
-        t = NUMBERS[toChar][i];
+        s = digits[digit][i];
+        t = NUMBERS[targetDigit][i];
 
-        //APP_LOG(APP_LOG_LEVEL_DEBUG, "Loop index now %d",  (int)(100 * (step/NUM_STEPS)));
-        currentPoints[i].x = (s.x - ((s.x - t.x) * (step / NUM_STEPS))) * 2 + 30;
-        currentPoints[i].y = (s.y - ((s.y - t.y) * (step / NUM_STEPS))) * 2 + 10;
+        int divisor = (NUM_STEPS - step);
+        int xdelta = ((t.x * scale + xoffset) - s.x) / divisor;
+        int ydelta = ((t.y * scale + yoffset) - s.y) / divisor;
 
-        if (i >0){
-            graphics_draw_line(ctx, currentPoints[i-1], currentPoints[i]);
+        digits[digit][i].x = s.x + xdelta; 
+        digits[digit][i].y = s.y + ydelta;
+
+    }
+}
+
+
+static void anim_frame(){
+    float scale = 5;
+
+    update_digit( 0, targetDigits[0], scale, step, 30, 10);
+    update_digit( 1, targetDigits[1], scale, step, 80, 10);
+
+    update_digit( 2, targetDigits[2], scale, step, 30, 70);
+    update_digit( 3, targetDigits[3], scale, step, 80, 70);
+
+    update_digit( 4, targetDigits[4], scale/2, step, 50, 130);
+    update_digit( 5, targetDigits[5], scale/2, step, 80, 130);
+    step++;
+
+    if (step > NUM_STEPS){
+        step = 0;
+    }
+    else{
+        layer_mark_dirty(layer);
+        app_timer_register(DELAY, anim_frame, 0);
+    }
+}
+
+
+static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
+    // Update things here
+    targetDigits[0] = (*tick_time).tm_hour /10;
+    targetDigits[1] = (*tick_time).tm_hour %10;
+
+    targetDigits[2] = (*tick_time).tm_min / 10;
+    targetDigits[3] = (*tick_time).tm_min % 10;
+
+    targetDigits[4] = (*tick_time).tm_sec / 10;
+    targetDigits[5] = (*tick_time).tm_sec % 10;
+
+    anim_frame();
+
+} 
+
+
+static void draw_digits(Layer *me, GContext *ctx){
+    graphics_context_set_stroke_color(ctx, GColorWhite);
+    for(unsigned int d= 0; d<DIGITS; d++){   
+        for (unsigned int i= 1; i<NUM_POINTS; i++){
+            graphics_draw_line(ctx, digits[d][i-1], digits[d][i]);
         }
     }
-
-    step++;
-    if (step > NUM_STEPS){
-        fromChar = toChar;
-        toChar++; 
-        if (toChar>NUM_CHAR-1) toChar=0;
-        step = 1;
-        APP_LOG(APP_LOG_LEVEL_DEBUG, "From char: %d To char %d", fromChar, toChar);
-    }
 }
 
-static void refresh(){
-    layer_mark_dirty(layer);
-    app_timer_register(DELAY, refresh, 0);
-}
 
 static void init() {
     window = window_create();
@@ -71,8 +107,9 @@ static void init() {
     layer = layer_create(bounds);
     layer_add_child(window_layer, layer);
 
-    app_timer_register(DELAY, refresh, 0);
-    layer_set_update_proc(layer, layer_update_callback);
+    tick_timer_service_subscribe(SECOND_UNIT, tick_handler);
+
+    layer_set_update_proc(layer, draw_digits);
 }
 
 static void deinit() {
