@@ -19,7 +19,7 @@ static GPoint NUMBERS[][NUM_POINTS] = {
     {{ 8,  4}, { 6,  6}, { 2,  6}, { 0,  4}, { 2,  0}, { 6,  0}, { 8,  4}, { 8,  6}, { 6, 10}, { 2, 10}, { 2, 10}, { 2, 10}, { 2, 10}}, // Nine
 };
 
-#define DELAY 8
+#define DELAY 16
 #define NUM_STEPS 32
 #define DIGITS 6
 
